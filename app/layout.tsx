@@ -6,6 +6,7 @@ import { Metadata } from "next"
 import { ClerkProvider } from "@clerk/nextjs"
 import { dark } from "@clerk/themes"
 import Provider from "./Provider"
+import Footer from "@/components/Footer"
 
 
 const fontSans = FontSans({
@@ -15,7 +16,7 @@ const fontSans = FontSans({
 
 export const metadata: Metadata = {
   title: 'CoDraft',
-  description: 'Your go-to collaborative editor',
+  description: 'Codraft - Collaborate and share documents in real-time. Enhance your productivity with seamless editing, secure sharing, and intuitive collaboration tools. Perfect for teams and individuals.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Provider>
             {children}
           </Provider>
+          <Footer/>
         </body>
       </html>
     </ClerkProvider>
