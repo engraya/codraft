@@ -3,22 +3,16 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import UserTypeSelector from './UserTypeSelector';
-import { Button } from './ui/button';
 import { removeCollaborator, updateDocumentAccess } from '@/lib/actions/room.actions';
 
 const Collaborator = ({ roomId, creatorId, collaborator, email, user }: CollaboratorProps) => {
   const [userType, setUserType] = useState<UserType>(collaborator.userType ?? 'viewer');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading]  = useState(false);
 
   const shareDocumentHandler = async (type: string) => {
     setLoading(true);
     try {
-      await updateDocumentAccess({
-        roomId,
-        email,
-        userType: type as UserType,
-        updatedBy: user,
-      });
+      await updateDocumentAccess({ roomId, email, userType: type as UserType, updatedBy: user });
     } catch (error) {
       console.error('Failed to update access:', error);
     } finally {
@@ -38,45 +32,51 @@ const Collaborator = ({ roomId, creatorId, collaborator, email, user }: Collabor
   };
 
   return (
-    <li className="flex items-center justify-between gap-2 py-3">
-      <div className="flex gap-2">
+    <li className="flex items-center justify-between gap-3 py-3">
+      {/* Avatar + name */}
+      <div className="flex min-w-0 items-center gap-2.5">
         <Image
           src={collaborator.avatar}
           alt={collaborator.name}
-          width={36}
-          height={36}
-          className="size-9 rounded-full"
+          width={32}
+          height={32}
+          className="size-8 rounded-full ring-2 ring-dark-400 shrink-0"
         />
-        <div>
-          <p className="line-clamp-1 text-sm font-semibold leading-4 text-white">
+        <div className="min-w-0">
+          <p className="line-clamp-1 text-sm font-medium text-[#F4F4F5]">
             {collaborator.name}
             {loading && (
-              <span className="text-10-regular pl-2 text-blue-100">
+              <span className="ml-1.5 text-xs font-normal text-[#71717A]">
                 updating…
               </span>
             )}
           </p>
-          <p className="text-sm font-light text-blue-100">{collaborator.email}</p>
+          <p className="line-clamp-1 text-xs text-[#71717A]">{collaborator.email}</p>
         </div>
       </div>
 
+      {/* Role / actions */}
       {creatorId === collaborator.id ? (
-        <p className="text-sm text-blue-100">Owner</p>
+        <span className="shrink-0 rounded-md bg-dark-400 px-2 py-0.5 text-xs font-medium text-[#71717A]">
+          Owner
+        </span>
       ) : (
-        <div className="flex items-center">
+        <div className="flex shrink-0 items-center gap-1">
           <UserTypeSelector
             userType={userType}
             setUserType={setUserType}
             onClickHandler={shareDocumentHandler}
           />
-          <Button
+          <button
             type="button"
             disabled={loading}
-            className="remove-btn"
             onClick={() => removeCollaboratorHandler(collaborator.email)}
+            className="rounded-lg px-2 py-1 text-xs font-medium text-[#71717A]
+                       transition-colors hover:bg-red-500/10 hover:text-red-400
+                       disabled:opacity-50"
           >
             Remove
-          </Button>
+          </button>
         </div>
       )}
     </li>

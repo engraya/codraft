@@ -1,37 +1,28 @@
-import { cn } from '@/lib/utils'
-import Image from 'next/image'
-import Link from 'next/link'
+import { cn } from '@/lib/utils';
+import Image from 'next/image';
+import Link from 'next/link';
 
-const Header = ({ children, className }: HeaderProps) => {
-  return (
-    <div className={cn("header", className)}>
-      <Link href='/' className="md:flex-1">
-      <div className="flex gap-x-4">
-      <Image 
-          src="/assets/icons/logo.svg"
-          alt="Logo with name"
-          width={120}
-          height={32}
-          className="hidden h-12 w-12 md:block"
-        />
-          <h1 className="hidden md:block text-4xl font-extrabold leading-none tracking-normal text-gray-900 md:text-3xl md:tracking-tight">
-        <span className="block w-full text-transparent text-center bg-clip-text bg-gradient-to-r from-green-400 to-purple-300 lg:inline">
-          CoDraft
-        </span>
-      </h1>
-      </div>
-        <Image 
+const Header = ({ children, className }: HeaderProps) => (
+  <div className={cn('header', className)}>
+    <Link href="/" className="flex items-center gap-2.5 shrink-0 md:flex-none">
+      {/* Icon mark */}
+      <div className="flex size-8 items-center justify-center rounded-xl bg-blue-500/10 border border-blue-500/20">
+        <Image
           src="/assets/icons/logo-icon.svg"
-          alt="Logo"
-          width={32}
-          height={32}
-          className="mr-2 h-12 w-12 md:hidden"
+          alt="CoDraft"
+          width={18}
+          height={18}
         />
-      </Link>
+      </div>
 
-      {children}
-    </div>
-  )
-}
+      {/* Wordmark — hidden on mobile */}
+      <span className="hidden text-[15px] font-semibold tracking-tight text-[#F4F4F5] md:block">
+        CoDraft
+      </span>
+    </Link>
 
-export default Header
+    {children}
+  </div>
+);
+
+export default Header;

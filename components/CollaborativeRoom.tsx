@@ -6,10 +6,10 @@ import Header from '@/components/Header';
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 import ActiveCollaborators from './ActiveCollaborators';
 import { Input } from './ui/input';
-import Image from 'next/image';
 import Loader from './Loader';
 import ShareModal from './ShareModal';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { Pencil, CheckCircle2 } from 'lucide-react';
 
 const CollaborativeRoom = ({
   roomId,
@@ -33,51 +33,57 @@ const CollaborativeRoom = ({
       <ClientSideSuspense fallback={<Loader />}>
         <div className="collaborative-room">
           <Header>
+            {/* ── Document title (center) ── */}
             <div
               ref={containerRef}
-              className="flex w-fit items-center justify-center gap-2"
+              className="flex flex-1 items-center justify-center gap-2 px-2"
             >
               {editing && !saving ? (
                 <Input
                   type="text"
                   value={title}
                   ref={inputRef}
-                  placeholder="Enter title"
+                  placeholder="Untitled"
                   onChange={(e) => setTitle(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="document-title-input"
+                  className="document-title-input max-w-xs"
+                  autoFocus
                 />
               ) : (
-                <p className="document-title">{title}</p>
+                <p className="document-title line-clamp-1 max-w-xs">{title || 'Untitled'}</p>
               )}
 
+              {/* Edit title button (owner/editor only) */}
               {currentUserType === 'editor' && !editing && (
                 <button
                   aria-label="Edit document title"
                   onClick={() => setEditing(true)}
-                  className="pointer"
+                  className="flex size-6 items-center justify-center rounded-md text-[#52525B]
+                             transition-all hover:bg-dark-400 hover:text-[#A1A1AA]"
                 >
-                  <Image
-                    src="/assets/icons/edit.svg"
-                    alt="edit"
-                    width={24}
-                    height={24}
-                  />
+                  <Pencil className="size-3" strokeWidth={2} />
                 </button>
               )}
 
+              {/* View-only badge */}
               {currentUserType !== 'editor' && !editing && (
-                <p className="view-only-tag">View only</p>
+                <span className="view-only-tag">View only</span>
               )}
 
+              {/* Auto-save indicator */}
               {saving && (
-                <p className="text-sm text-gray-400" aria-live="polite">
-                  saving…
-                </p>
+                <span
+                  aria-live="polite"
+                  className="flex items-center gap-1 text-xs text-[#52525B]"
+                >
+                  <CheckCircle2 className="size-3 text-emerald-500 animate-pulse" />
+                  Saving…
+                </span>
               )}
             </div>
 
-            <div className="flex w-full flex-1 justify-end gap-2 sm:gap-3">
+            {/* ── Right actions ── */}
+            <div className="flex items-center gap-2 shrink-0">
               <ActiveCollaborators />
 
               <ShareModal

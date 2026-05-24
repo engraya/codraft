@@ -6,7 +6,6 @@ import { Metadata } from "next"
 import { ClerkProvider } from "@clerk/nextjs"
 import { dark } from "@clerk/themes"
 import Provider from "./Provider"
-import Footer from "@/components/Footer"
 
 
 const fontSans = FontSans({
@@ -40,7 +39,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Provider>
             {children}
           </Provider>
-          <Footer/>
         </body>
       </html>
     </ClerkProvider>

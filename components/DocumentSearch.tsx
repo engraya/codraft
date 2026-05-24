@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Search } from 'lucide-react';
+import { Search, ArrowUpDown } from 'lucide-react';
 import { useState, useTransition } from 'react';
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 
 export default function DocumentSearch({ initialQ = '', initialSort = 'updated' }: Props) {
   const router = useRouter();
-  const [q, setQ] = useState(initialQ);
+  const [q, setQ]       = useState(initialQ);
   const [sort, setSort] = useState(initialSort);
   const [, startTransition] = useTransition();
 
@@ -25,34 +25,42 @@ export default function DocumentSearch({ initialQ = '', initialSort = 'updated' 
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-3 pb-2">
+    <div className="flex w-full max-w-[860px] flex-wrap items-center gap-2">
+      {/* Search input */}
       <div className="relative">
         <Search
-          className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-blue-100/50"
+          className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-[#52525B]"
           aria-hidden
         />
         <input
           type="search"
           value={q}
-          onChange={(e) => {
-            setQ(e.target.value);
-            navigate(e.target.value, sort);
-          }}
+          onChange={(e) => { setQ(e.target.value); navigate(e.target.value, sort); }}
           placeholder="Search documents…"
-          className="h-9 w-56 rounded-md bg-dark-400 pl-9 pr-3 text-sm text-white placeholder:text-blue-100/40 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="h-8 w-52 rounded-lg border border-dark-500 bg-dark-300 pl-8 pr-3
+                     text-sm text-[#F4F4F5] placeholder:text-[#52525B]
+                     focus:outline-none focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/15
+                     transition-all duration-150"
         />
       </div>
-      <select
-        value={sort}
-        onChange={(e) => {
-          setSort(e.target.value);
-          navigate(q, e.target.value);
-        }}
-        className="h-9 rounded-md bg-dark-400 px-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
-      >
-        <option value="updated">Last edited</option>
-        <option value="created">Date created</option>
-      </select>
+
+      {/* Sort selector */}
+      <div className="relative flex items-center">
+        <ArrowUpDown
+          className="pointer-events-none absolute left-2.5 size-3 text-[#52525B]"
+          aria-hidden
+        />
+        <select
+          value={sort}
+          onChange={(e) => { setSort(e.target.value); navigate(q, e.target.value); }}
+          className="h-8 appearance-none rounded-lg border border-dark-500 bg-dark-300 pl-7 pr-3
+                     text-sm text-[#A1A1AA] focus:outline-none focus:border-blue-500/60
+                     focus:ring-2 focus:ring-blue-500/15 transition-all duration-150 cursor-pointer"
+        >
+          <option value="updated">Last edited</option>
+          <option value="created">Date created</option>
+        </select>
+      </div>
     </div>
   );
 }

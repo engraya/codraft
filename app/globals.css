@@ -7,301 +7,431 @@
 
 @import "../styles/dark-theme.css";
 
-/* ========================================== TAILWIND STYLES */
+/* ============================================================
+   BASE
+   ============================================================ */
 @layer base {
   :root {
-    background: #09111f;
-    color: #fff;
+    background: #09090B;
+    color: #F4F4F5;
     margin: 0;
   }
 
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Refined scrollbar */
   .custom-scrollbar::-webkit-scrollbar {
     width: 4px;
     height: 4px;
     border-radius: 50px;
   }
-
   .custom-scrollbar::-webkit-scrollbar-track {
-    background: #09090a;
+    background: transparent;
   }
-
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #2e3d5b;
+    background: #3F3F46;
     border-radius: 50px;
   }
-
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #7878a3;
+    background: #4F6FE8;
   }
 }
 
+/* ============================================================
+   UTILITY LAYER
+   ============================================================ */
 @layer utilities {
-  .text-28-semibold {
-    @apply text-[28px] font-semibold;
-  }
-  .text-10-regular {
-    @apply text-[10px] font-normal;
-  }
 
-  .gradient-blue {
-    @apply bg-gradient-to-t from-blue-500 to-blue-400;
-  }
-  .gradient-red {
-    @apply bg-gradient-to-t from-red-500 to-red-400;
-  }
+  /* ── Typography helpers ── */
+  .text-28-semibold { @apply text-[28px] font-semibold; }
+  .text-10-regular  { @apply text-[10px] font-normal; }
 
-  .shad-dialog {
-    @apply w-full max-w-[400px] rounded-xl border-none bg-doc bg-cover px-5 py-7 shadow-xl sm:min-w-[500px] !important;
-  }
+  /* ── Gradient fills ── */
+  .gradient-blue { @apply bg-gradient-to-b from-blue-400 to-blue-500; }
+  .gradient-red  { @apply bg-gradient-to-b from-red-400  to-red-500; }
 
-  .shad-dialog button {
-    @apply focus:ring-0 focus:ring-offset-0 focus-visible:border-none focus-visible:outline-none focus-visible:ring-transparent focus-visible:ring-offset-0 !important;
-  }
-
-  .shad-select {
-    @apply w-fit border-none bg-transparent text-blue-100 !important;
-  }
-
-  .shad-select svg {
-    @apply ml-1 mt-1;
-  }
-
-  .shad-select-item {
-    @apply cursor-pointer bg-dark-200 text-blue-100 focus:bg-dark-300 hover:bg-dark-300 focus:text-blue-100 !important;
-  }
-
-  .shad-popover {
-    @apply w-[460px] border-none bg-dark-200 shadow-lg !important;
-  }
-
-  .floating-toolbar {
-    @apply flex w-full min-w-max items-center justify-center gap-2 rounded-lg bg-dark-350 p-1.5 shadow-xl;
-  }
-
-  .floating-toolbar-btn {
-    @apply relative inline-flex size-8 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50;
-  }
-
-  .toolbar-wrapper {
-    @apply z-50 custom-scrollbar w-screen overflow-auto border-y border-dark-300 bg-dark-100 pl-3 pr-4 shadow-sm;
-  }
-
-  .editor-wrapper {
-    @apply custom-scrollbar h-[calc(100vh-140px)] gap-5 overflow-auto px-5 pt-5 lg:flex-row lg:items-start lg:justify-center  xl:gap-10 xl:pt-10;
-  }
-
+  /* ──────────────────────────────────────────────────────────
+     HEADER
+     ────────────────────────────────────────────────────────── */
   .header {
-    @apply min-h-[92px] min-w-full flex-nowrap bg-dark-100 flex w-full items-center justify-between gap-2 px-8;
+    @apply min-h-[60px] min-w-full bg-dark-100/90 backdrop-blur-md
+           border-b border-dark-400 flex w-full flex-nowrap
+           items-center justify-between gap-2 px-5 sticky top-0 z-50;
   }
 
+  /* ──────────────────────────────────────────────────────────
+     DIALOGS / MODALS
+     ────────────────────────────────────────────────────────── */
+  .shad-dialog {
+    @apply w-full max-w-[440px] rounded-2xl border border-dark-400
+           bg-dark-200 px-6 py-6 shadow-modal
+           sm:min-w-[500px] !important;
+  }
+  .shad-dialog button {
+    @apply focus:ring-0 focus:ring-offset-0 focus-visible:border-none
+           focus-visible:outline-none focus-visible:ring-transparent
+           focus-visible:ring-offset-0 !important;
+  }
+
+  /* ── Select ── */
+  .shad-select {
+    @apply w-fit border-none bg-transparent text-[#A1A1AA] !important;
+  }
+  .shad-select svg { @apply ml-1 mt-1; }
+  .shad-select-item {
+    @apply cursor-pointer bg-dark-200 text-[#F4F4F5]
+           focus:bg-dark-300 hover:bg-dark-300
+           focus:text-white !important;
+  }
+
+  /* ── Popover ── */
+  .shad-popover {
+    @apply w-[380px] border border-dark-400 bg-dark-200
+           shadow-modal rounded-2xl overflow-hidden !important;
+  }
+
+  /* ──────────────────────────────────────────────────────────
+     EDITOR TOOLBAR
+     ────────────────────────────────────────────────────────── */
+  .floating-toolbar {
+    @apply flex w-full min-w-max items-center justify-center gap-1
+           rounded-xl bg-dark-200 border border-dark-400 p-1.5 shadow-modal;
+  }
+  .floating-toolbar-btn {
+    @apply relative inline-flex size-8 items-center justify-center whitespace-nowrap
+           rounded-lg text-sm font-medium transition-all duration-100
+           focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-500
+           disabled:pointer-events-none disabled:opacity-50
+           text-[#A1A1AA] hover:bg-dark-400 hover:text-[#F4F4F5];
+  }
+  .toolbar-wrapper {
+    @apply z-50 custom-scrollbar w-screen overflow-auto
+           border-b border-dark-400 bg-dark-100 pl-3 pr-4;
+  }
+
+  /* ──────────────────────────────────────────────────────────
+     EDITOR CANVAS
+     ────────────────────────────────────────────────────────── */
+  .editor-wrapper {
+    @apply custom-scrollbar h-[calc(100vh-118px)] gap-5 overflow-auto
+           px-5 pt-5 lg:flex-row lg:items-start lg:justify-center
+           xl:gap-10 xl:pt-10;
+  }
+
+  /* ──────────────────────────────────────────────────────────
+     DOCUMENT LIST — DASHBOARD
+     ────────────────────────────────────────────────────────── */
   .document-list-container {
-    @apply flex flex-col items-center mb-10 w-full gap-10 px-5;
+    @apply flex flex-col items-center mb-10 w-full gap-6 px-5;
   }
-
   .document-list-title {
-    @apply max-w-[730px] items-end flex w-full justify-between;
+    @apply max-w-[860px] items-center flex w-full justify-between;
   }
 
+  /* Individual doc row card */
   .document-list-item {
-    @apply flex items-center justify-between gap-4 rounded-lg bg-doc bg-cover p-5 shadow-xl;
+    @apply group flex items-center justify-between gap-4 rounded-xl
+           bg-dark-200 border border-dark-400 px-4 py-3.5
+           transition-all duration-150
+           hover:border-dark-500 hover:bg-dark-300 cursor-pointer;
   }
 
+  /* Empty state */
   .document-list-empty {
-    @apply flex w-full max-w-[730px] flex-col items-center justify-center gap-5 rounded-lg bg-dark-200 px-10 py-8;
-  }
-
-  .document-title-input {
-    @apply min-w-[78px] border-none bg-transparent px-0 text-left text-base font-semibold leading-[24px] focus-visible:ring-0 focus-visible:ring-offset-0 disabled:text-black sm:text-xl md:text-center !important;
-  }
-
-  .document-title {
-    @apply line-clamp-1 border-dark-400 text-base font-semibold leading-[24px] sm:pl-0 sm:text-xl;
-  }
-
-  .view-only-tag {
-    @apply rounded-md bg-dark-400/50 px-2 py-0.5 text-xs text-blue-100/50;
-  }
-
-  .collaborators-list {
-    @apply hidden items-center justify-end -space-x-3 overflow-hidden sm:flex;
-  }
-
-  .share-input {
-    @apply h-11 flex-1 border-none bg-dark-400 focus-visible:ring-0 focus-visible:ring-offset-0 !important;
-  }
-
-  .remove-btn {
-    @apply rounded-lg bg-transparent px-0 text-red-500 hover:bg-transparent;
-  }
-
-  .comments-container {
-    @apply mb-10 space-y-4 lg:w-fit flex w-full flex-col items-center justify-center;
-  }
-
-  .comment-composer {
-    @apply w-full max-w-[800px] border border-dark-300 bg-dark-200 shadow-sm lg:w-[350px];
-  }
-
-  .comment-thread {
-    @apply w-full max-w-[800px] border border-dark-300 bg-dark-200 shadow-sm lg:w-[350px] transition-all;
-  }
-
-  .loader {
-    @apply flex size-full h-screen items-center justify-center gap-3 text-white;
-  }
-
-  /* ======================== Auth Pages */
-  .auth-page {
-    @apply flex h-screen w-full flex-col items-center justify-center gap-10;
-  }
-
-  /* ======================== Home Page */
-  .home-container {
-    @apply relative flex min-h-screen w-full flex-col items-center gap-5 sm:gap-10;
+    @apply flex w-full max-w-[860px] flex-col items-center justify-center
+           gap-5 rounded-2xl border border-dashed border-dark-500
+           bg-dark-200/40 px-10 py-20;
   }
 
   .document-ul {
-    @apply flex w-full max-w-[730px] flex-col gap-5;
+    @apply flex w-full max-w-[860px] flex-col gap-2;
   }
 
-  /* ======================== CollaborativeRoom */
+  /* ──────────────────────────────────────────────────────────
+     DOCUMENT EDITOR — TITLE
+     ────────────────────────────────────────────────────────── */
+  .document-title-input {
+    @apply min-w-[78px] border-none bg-transparent px-0 text-left
+           text-base font-semibold leading-[24px] text-[#F4F4F5]
+           focus-visible:ring-0 focus-visible:ring-offset-0
+           disabled:text-[#A1A1AA] sm:text-lg md:text-center !important;
+  }
+  .document-title {
+    @apply line-clamp-1 text-base font-semibold leading-[24px]
+           text-[#F4F4F5] sm:pl-0 sm:text-lg;
+  }
+  .view-only-tag {
+    @apply rounded-md bg-dark-400 px-2 py-0.5 text-xs text-[#71717A]
+           font-medium tracking-wide;
+  }
+
+  /* ── Active collaborators ── */
+  .collaborators-list {
+    @apply hidden items-center justify-end -space-x-2.5 overflow-hidden sm:flex;
+  }
+
+  /* ── Share modal input ── */
+  .share-input {
+    @apply h-10 flex-1 border-none bg-transparent
+           text-[#F4F4F5] placeholder:text-[#52525B]
+           focus-visible:ring-0 focus-visible:ring-offset-0 !important;
+  }
+
+  /* ── Remove button ── */
+  .remove-btn {
+    @apply rounded-lg bg-transparent px-0 text-red-500 hover:bg-transparent
+           hover:text-red-400 transition-colors;
+  }
+
+  /* ──────────────────────────────────────────────────────────
+     COMMENTS
+     ────────────────────────────────────────────────────────── */
+  .comments-container {
+    @apply mb-10 space-y-3 lg:w-fit flex w-full flex-col items-center justify-center;
+  }
+  .comment-composer {
+    @apply w-full max-w-[800px] border border-dark-400 bg-dark-200
+           rounded-xl shadow-card lg:w-[350px];
+  }
+  .comment-thread {
+    @apply w-full max-w-[800px] border border-dark-400 bg-dark-200
+           rounded-xl shadow-card lg:w-[350px] transition-all;
+  }
+
+  /* ──────────────────────────────────────────────────────────
+     LOADER
+     ────────────────────────────────────────────────────────── */
+  .loader {
+    @apply flex size-full h-screen items-center justify-center gap-3;
+  }
+
+  /* ──────────────────────────────────────────────────────────
+     AUTH PAGES
+     ────────────────────────────────────────────────────────── */
+  .auth-page {
+    @apply flex min-h-screen w-full;
+  }
+  .auth-brand-panel {
+    @apply hidden lg:flex flex-col justify-between w-[44%]
+           bg-dark-200 border-r border-dark-400 p-12 relative overflow-hidden;
+  }
+  .auth-form-panel {
+    @apply flex flex-1 flex-col items-center justify-center
+           px-6 py-12 bg-dark-100;
+  }
+
+  /* ──────────────────────────────────────────────────────────
+     HOME PAGE
+     ────────────────────────────────────────────────────────── */
+  .home-container {
+    @apply relative flex min-h-screen w-full flex-col items-center;
+  }
+
+  /* ──────────────────────────────────────────────────────────
+     COLLABORATIVE ROOM
+     ────────────────────────────────────────────────────────── */
   .collaborative-room {
     @apply flex size-full max-h-screen flex-1 flex-col items-center overflow-hidden;
   }
 }
 
-/* ======================== Clerk Override */
+/* ============================================================
+   CLERK OVERRIDES
+   ============================================================ */
 .cl-avatarBox {
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
 }
-
 .cl-userButtonTrigger {
   height: fit-content !important;
 }
-
 .cl-cardBox,
 .cl-signIn-start,
 .cl-signUp-start,
 .cl-footer {
-  background: #060d18;
+  background: transparent;
   box-shadow: none;
-  padding: 20px;
+  padding: 0;
 }
-
-.cl-socialButtonsBlockButton,
-.cl-socialButtonsBlockButton:hover {
+.cl-card {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+.cl-socialButtonsBlockButton {
   height: 40px;
-  background-color: #3371ff;
-  color: #fff;
+  background-color: #18181B !important;
+  color: #F4F4F5 !important;
+  border: 1px solid #27272A !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  transition: background 0.15s !important;
 }
-
+.cl-socialButtonsBlockButton:hover {
+  background-color: #27272A !important;
+}
 .cl-internal-2gzuzc {
   filter: brightness(1000%);
 }
-
 .cl-logoBox {
   height: 52px;
+  display: none !important;
+}
+.cl-headerTitle {
+  color: #F4F4F5 !important;
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+}
+.cl-headerSubtitle {
+  color: #71717A !important;
+  font-size: 14px !important;
+}
+.cl-formFieldLabel {
+  color: #A1A1AA !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+.cl-formFieldInput {
+  background: #18181B !important;
+  border: 1px solid #27272A !important;
+  color: #F4F4F5 !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  transition: border-color 0.15s, box-shadow 0.15s !important;
+}
+.cl-formFieldInput:focus {
+  border-color: #4F6FE8 !important;
+  box-shadow: 0 0 0 3px rgba(79, 111, 232, 0.15) !important;
+  outline: none !important;
+}
+.cl-formButtonPrimary {
+  background: #4F6FE8 !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  transition: background 0.15s !important;
+}
+.cl-formButtonPrimary:hover {
+  background: #3D5DD4 !important;
+}
+.cl-dividerLine {
+  background: #27272A !important;
+}
+.cl-dividerText {
+  color: #52525B !important;
+  font-size: 12px !important;
+}
+.cl-footerActionText {
+  color: #71717A !important;
+  font-size: 13px !important;
+}
+.cl-footerActionLink {
+  color: #4F6FE8 !important;
+  font-size: 13px !important;
+}
+.cl-identityPreviewText {
+  color: #A1A1AA !important;
+}
+.cl-alternativeMethodsBlockButton {
+  color: #A1A1AA !important;
+  border: 1px solid #27272A !important;
+  border-radius: 8px !important;
 }
 
-/* ======================== Liveblocks Override */
+/* ============================================================
+   LIVEBLOCKS OVERRIDES
+   ============================================================ */
 .lb-root {
-  --lb-accent-subtle: #0b1527;
-  --lb-radius: 0px;
-  --lb-dynamic-background: #1b2840;
+  --lb-accent-subtle: #111113;
+  --lb-radius: 8px;
+  --lb-dynamic-background: #18181B;
 }
-
 .lb-comment,
 .lb-thread-comments,
 .lb-composer,
 .lb-comment-reaction {
-  background-color: #0f1c34;
-  color: #fff;
+  background-color: #111113;
+  color: #F4F4F5;
 }
-
 .lb-button {
-  --lb-foreground-moderate: #fff;
+  --lb-foreground-moderate: #F4F4F5;
 }
-
-.lb-button:where([data-variant="primary"]) {
-  background-color: #161e30;
-  color: #b4c6ee;
-  padding: 8px;
+.lb-button:where([data-variant='primary']) {
+  background-color: #4F6FE8;
+  color: #fff;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 13px;
 }
-
 .lb-button:where(
-    [data-variant="default"]:not(
+    [data-variant='default']:not(
         :is(
             :enabled:hover,
             :enabled:focus-visible,
-            [aria-expanded="true"],
-            [aria-selected="true"]
+            [aria-expanded='true'],
+            [aria-selected='true']
           )
       )
   ) {
-  color: #b4c6ee;
+  color: #A1A1AA;
 }
-
 .lb-button:where(
     :enabled:hover,
     :enabled:focus-visible,
-    [aria-expanded="true"],
-    [aria-selected="true"]
+    [aria-expanded='true'],
+    [aria-selected='true']
   ) {
-  --lb-button-background: #161e30;
-
-  color: #b4c6ee;
+  --lb-button-background: #18181B;
+  color: #F4F4F5;
 }
-
 .lb-inbox-notification-list-item:where(:not(:last-of-type)) {
-  border-bottom: none;
+  border-bottom: 1px solid #27272A;
 }
-
 .lb-comment-body,
 .lb-dropdown-item,
 .lb-dropdown-item-icon,
 .lb-composer-editor {
-  color: #fff;
+  color: #F4F4F5;
 }
-
-.lb-composer-action {
-  padding: 8px;
-}
-
+.lb-composer-action { padding: 8px; }
 .lb-comment-content {
-  background: #0b1527;
-  margin-top: 16px;
-  padding: 12px;
-  border-radius: 4px;
-  font-size: 14px;
+  background: #18181B;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.5;
 }
-
 .lb-comment-date,
 .lb-lexical-mention-suggestion-user,
 .lb-composer-suggestions-list-item,
 .lb-inbox-notification-date,
 .lb-comment-author {
-  color: #b4c6ee;
+  color: #71717A;
 }
-
-.data-liveblocks-portal {
-  color: #b4c6ee !important;
-}
-
+.data-liveblocks-portal { color: #A1A1AA !important; }
 .lb-root:where(:not(.lb-root .lb-root)) {
-  --lb-dynamic-background: #1b2840;
-  color: #fff;
+  --lb-dynamic-background: #18181B;
+  color: #F4F4F5;
 }
-
 .lb-composer-editor :where([data-placeholder]) {
-  color: #b4c6ee;
-  font-size: 14px;
+  color: #52525B;
+  font-size: 13px;
 }
-
 .lb-lexical-floating-threads-thread:where([data-resolved]) {
   opacity: 40%;
 }
-
 .lb-elevation {
-  background: #0f1c34;
+  background: #111113;
+  border: 1px solid #27272A;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+.lb-inbox-notification {
+  padding: 12px 16px;
 }

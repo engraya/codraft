@@ -1,8 +1,7 @@
 'use client';
 
 import { createDocument } from '@/lib/actions/room.actions';
-import { Button } from './ui/button';
-import Image from 'next/image';
+import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -24,29 +23,31 @@ const AddDocumentBtn = ({ userId, email }: AddDocumentBtnProps) => {
       const room = await createDocument({ userId, email });
       if (room) router.push(`/documents/${room.id}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create document. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to create document.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-end gap-1">
-      <Button
+    <div className="flex flex-col items-end gap-1.5">
+      <button
         type="button"
         onClick={addDocumentHandler}
         disabled={loading}
-        className="gradient-blue flex gap-1 shadow-md disabled:opacity-60"
+        className="inline-flex items-center gap-1.5 rounded-lg bg-blue-500 px-3.5 py-2 text-sm font-medium text-white
+                   transition-all duration-150 hover:bg-blue-400 active:scale-[0.98]
+                   disabled:opacity-50 disabled:pointer-events-none shadow-sm"
       >
-        <Image
-          src="/assets/icons/add.svg"
-          alt={loading ? 'Creating…' : 'Add document'}
-          width={24}
-          height={24}
-          className={loading ? 'animate-pulse' : ''}
+        <Plus
+          className={`size-4 shrink-0 ${loading ? 'animate-spin' : ''}`}
+          strokeWidth={2.5}
         />
-        <p className="hidden sm:block">{loading ? 'Creating…' : 'Start a blank document'}</p>
-      </Button>
+        <span className="hidden sm:block">
+          {loading ? 'Creating…' : 'New document'}
+        </span>
+      </button>
+
       {error && (
         <p role="alert" className="text-xs text-red-400">
           {error}
