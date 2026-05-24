@@ -1,46 +1,48 @@
 'use server';
 
-import { clerkClient } from "@clerk/nextjs/server";
-import { parseStringify } from "../utils";
-import { liveblocks } from "../liveblocks";
+import { clerkClient } from '@clerk/nextjs/server';
+import { parseStringify } from '../utils';
+import { liveblocks } from '../liveblocks';
 
-export const getClerkUsers = async ({ userIds }: { userIds: string[]}) => {
-  try {
-    const { data } = await clerkClient.users.getUserList({
-      emailAddress: userIds,
-    });
+export const getClerkUsers = async ({ userIds }: { userIds: string[] }) => {
+  const { data } = await clerkClient.users.getUserList({
+    emailAddress: userIds,
+  });
 
-    const users = data.map((user) => ({
-      id: user.id,
-      name: `${user.firstName} ${user.lastName}`,
-      email: user.emailAddresses[0].emailAddress,
-      avatar: user.imageUrl,
-    }));
+  const users = data.map((user) => ({
+    id: user.id,
+    name: `${user.firstName} ${user.lastName}`.trim(),
+    email: user.emailAddresses[0].emailAddress,
+    avatar: user.imageUrl,
+  }));
 
-    const sortedUsers = userIds.map((email) => users.find((user) => user.email === email));
+  // Preserve the original order and drop any emails that Clerk didn't return
+  const sortedUsers = userIds
+    .map((email) => users.find((u) => u.email === email))
+    .filter((u): u is (typeof users)[number] => u !== undefined);
 
-    return parseStringify(sortedUsers);
-  } catch (error) {
-    console.log(`Error fetching users: ${error}`);
-  }
-}
+  return parseStringify(sortedUsers);
+};
 
-export const getDocumentUsers = async ({ roomId, currentUser, text }: { roomId: string, currentUser: string, text: string }) => {
-  try {
-    const room = await liveblocks.getRoom(roomId);
+export const getDocumentUsers = async ({
+  roomId,
+  currentUser,
+  text,
+}: {
+  roomId: string;
+  currentUser: string;
+  text: string;
+}) => {
+  const room = await liveblocks.getRoom(roomId);
 
-    const users = Object.keys(room.usersAccesses).filter((email) => email !== currentUser);
+  const users = Object.keys(room.usersAccesses).filter(
+    (email) => email !== currentUser
+  );
 
-    if(text.length) {
-      const lowerCaseText = text.toLowerCase();
+  if (!text.length) return parseStringify(users);
 
-      const filteredUsers = users.filter((email: string) => email.toLowerCase().includes(lowerCaseText))
-
-      return parseStringify(filteredUsers);
-    }
-
-    return parseStringify(users);
-  } catch (error) {
-    console.log(`Error fetching document users: ${error}`);
-  }
-}
+  const query = text.toLowerCase();
+  return parseStringify(
+    users.filter((email) => email.toLowerCase().includes(query))
+  );
+};

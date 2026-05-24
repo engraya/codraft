@@ -23,8 +23,8 @@ export default function FloatingToolbar() {
   const [range, setRange] = useState<Range | null>(null);
 
   useEffect(() => {
-    editor.registerUpdateListener(({ tags }) => {
-      return editor.getEditorState().read(() => {
+    return editor.registerUpdateListener(({ tags }) => {
+      editor.getEditorState().read(() => {
         // Ignore selection updates related to collaboration
         if (tags.has('collaboration')) return;
 

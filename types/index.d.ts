@@ -1,14 +1,15 @@
-/* eslint-disable no-unused-vars */
+import type { ThreadData, BaseMetadata } from '@liveblocks/client';
+
 declare type SearchParamProps = {
   params: { [key: string]: string };
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
-declare type AccessType = ["room:write"] | ["room:read", "room:presence:write"];
+declare type AccessType = ['room:write'] | ['room:read', 'room:presence:write'];
 
 declare type RoomAccesses = Record<string, AccessType>;
 
-declare type UserType = "creator" | "editor" | "viewer";
+declare type UserType = 'creator' | 'editor' | 'viewer';
 
 declare type RoomMetadata = {
   creatorId: string;
@@ -38,7 +39,7 @@ declare type ShareDocumentParams = {
 };
 
 declare type UserTypeSelectorParams = {
-  userType: string;
+  userType: UserType;
   setUserType: React.Dispatch<React.SetStateAction<UserType>>;
   onClickHandler?: (value: string) => void;
 };

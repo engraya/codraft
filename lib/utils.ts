@@ -5,92 +5,76 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const parseStringify = (value: any) => JSON.parse(JSON.stringify(value));
+export const parseStringify = <T>(value: T): T =>
+  JSON.parse(JSON.stringify(value));
 
 export const getAccessType = (userType: UserType) => {
   switch (userType) {
     case 'creator':
-      return ['room:write'];
     case 'editor':
       return ['room:write'];
     case 'viewer':
-      return ['room:read', 'room:presence:write'];
     default:
       return ['room:read', 'room:presence:write'];
   }
 };
 
 export const dateConverter = (timestamp: string): string => {
-  const timestampNum = Math.round(new Date(timestamp).getTime() / 1000);
-  const date: Date = new Date(timestampNum * 1000);
-  const now: Date = new Date();
+  const date = new Date(timestamp);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffSecs = diffMs / 1000;
+  const diffMins = diffSecs / 60;
+  const diffHours = diffMins / 60;
+  const diffDays = diffHours / 24;
 
-  const diff: number = now.getTime() - date.getTime();
-  const diffInSeconds: number = diff / 1000;
-  const diffInMinutes: number = diffInSeconds / 60;
-  const diffInHours: number = diffInMinutes / 60;
-  const diffInDays: number = diffInHours / 24;
-
-  switch (true) {
-    case diffInDays > 7:
-      return `${Math.floor(diffInDays / 7)} weeks ago`;
-    case diffInDays >= 1 && diffInDays <= 7:
-      return `${Math.floor(diffInDays)} days ago`;
-    case diffInHours >= 1:
-      return `${Math.floor(diffInHours)} hours ago`;
-    case diffInMinutes >= 1:
-      return `${Math.floor(diffInMinutes)} minutes ago`;
-    default:
-      return 'Just now';
-  }
+  if (diffDays > 7) return `${Math.floor(diffDays / 7)} weeks ago`;
+  if (diffDays >= 1) return `${Math.floor(diffDays)} days ago`;
+  if (diffHours >= 1) return `${Math.floor(diffHours)} hours ago`;
+  if (diffMins >= 1) return `${Math.floor(diffMins)} minutes ago`;
+  return 'Just now';
 };
 
-// Function to generate a random color in hex format, excluding specified colors
-export function getRandomColor() {
-  const avoidColors = ['#000000', '#FFFFFF', '#8B4513']; // Black, White, Brown in hex format
+const toHex = (n: number) => n.toString(16).padStart(2, '0');
 
-  let randomColor;
+export function getRandomColor(): string {
+  const avoidColors = ['#000000', '#ffffff', '#8b4513'];
+  let color: string;
   do {
-    // Generate random RGB values
-    const r = Math.floor(Math.random() * 256); // Random number between 0-255
+    const r = Math.floor(Math.random() * 256);
     const g = Math.floor(Math.random() * 256);
     const b = Math.floor(Math.random() * 256);
-
-    // Convert RGB to hex format
-    randomColor = `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`;
-  } while (avoidColors.includes(randomColor));
-
-  return randomColor;
+    color = `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  } while (avoidColors.includes(color.toLowerCase()));
+  return color;
 }
 
 export const brightColors = [
-  '#2E8B57', // Darker Neon Green
-  '#FF6EB4', // Darker Neon Pink
-  '#00CDCD', // Darker Cyan
-  '#FF00FF', // Darker Neon Magenta
-  '#FF007F', // Darker Bright Pink
-  '#FFD700', // Darker Neon Yellow
-  '#00CED1', // Darker Neon Mint Green
-  '#FF1493', // Darker Neon Red
-  '#00CED1', // Darker Bright Aqua
-  '#FF7F50', // Darker Neon Coral
-  '#9ACD32', // Darker Neon Lime
-  '#FFA500', // Darker Neon Orange
-  '#32CD32', // Darker Neon Chartreuse
-  '#ADFF2F', // Darker Neon Yellow Green
-  '#DB7093', // Darker Neon Fuchsia
-  '#00FF7F', // Darker Spring Green
-  '#FFD700', // Darker Electric Lime
-  '#FF007F', // Darker Bright Magenta
-  '#FF6347', // Darker Neon Vermilion
+  '#2E8B57', // sea green
+  '#FF6EB4', // hot pink
+  '#00CDCD', // cyan
+  '#FF00FF', // magenta
+  '#FF007F', // rose
+  '#FFD700', // gold
+  '#00CED1', // dark turquoise
+  '#FF1493', // deep pink
+  '#FF7F50', // coral
+  '#9ACD32', // yellow-green
+  '#FFA500', // orange
+  '#32CD32', // lime green
+  '#ADFF2F', // green-yellow
+  '#DB7093', // pale violet red
+  '#00FF7F', // spring green
+  '#FF6347', // tomato
+  '#7B68EE', // medium slate blue
+  '#20B2AA', // light sea green
+  '#FF4500', // orange red
 ];
 
-export function getUserColor(userId: string) {
+export function getUserColor(userId: string): string {
   let sum = 0;
   for (let i = 0; i < userId.length; i++) {
     sum += userId.charCodeAt(i);
   }
-
-  const colorIndex = sum % brightColors.length;
-  return brightColors[colorIndex];
+  return brightColors[sum % brightColors.length];
 }
